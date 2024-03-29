@@ -1,0 +1,21 @@
+
+const { client } = require('./index');
+
+async function dropTables() {
+  try {
+    console.log("Starting to drop tables...");
+
+    // have to make sure to drop in correct order
+    await client.query(`
+      DROP TABLE IF EXISTS addresses;
+      DROP TABLE IF EXISTS inventory_type;
+      DROP TABLE IF EXISTS inventory;
+      DROP TABLE IF EXISTS customers;
+    `);
+
+    console.log("Finished dropping tables!");
+  } catch (error) {
+    console.error("Error dropping tables!");
+    throw error;
+  }
+}
