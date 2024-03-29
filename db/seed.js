@@ -1,5 +1,5 @@
 
-const { client } = require('./index');
+const { client, getAllCustomers, createCustomer, createAddress } = require('./index');
 
 async function dropTables() {
   try {
@@ -8,9 +8,9 @@ async function dropTables() {
     // have to make sure to drop in correct order
     await client.query(`
       DROP TABLE IF EXISTS addresses;
-      DROP TABLE IF EXISTS inventory_type;
-      DROP TABLE IF EXISTS inventory;
       DROP TABLE IF EXISTS customers;
+      DROP TABLE IF EXISTS inventory;
+      DROP TABLE IF EXISTS inventory_type;
     `);
 
     console.log("Finished dropping tables!");
@@ -26,25 +26,25 @@ async function createTables() {
   
       await client.query(`
 
+        CREATE TABLE customers (
+          id SERIAL PRIMARY KEY,
+          username varchar(255) UNIQUE NOT NULL,
+          password varchar(255) NOT NULL,
+          email varchar(255) NOT NULL,
+          firstname varchar(255) NOT NULL,
+          lastname varchar(255) NOT NULL,
+          phone_number varchar(255) NOT NULL,
+          role varchar(255) NOT NULL
+      );
+
         CREATE TABLE addresses (
             id SERIAL PRIMARY KEY,
+            customer_id INTEGER REFERENCES customers(id),
             street_number varchar(255) NOT NULL,
             street varchar(255) NOT NULL,
             city varchar(255) NOT NULL,
             state varchar(255) NOT NULL,
             zip varchar(255) NOT NULL
-        );
-
-        CREATE TABLE customers (
-            id SERIAL PRIMARY KEY,
-            username varchar(255) UNIQUE NOT NULL,
-            password varchar(255) NOT NULL,
-            email varchar(255) NOT NULL,
-            firstname varchar(255) NOT NULL,
-            lastname varchar(255) NOT NULL,
-            addressId INTEGER REFERENCES addresses(id),
-            phone_number varchar(255) NOT NULL,
-            role varchar(255) NOT NULL
         );
   
         CREATE TABLE inventory_type (
@@ -69,17 +69,111 @@ async function createTables() {
     }
   }
 
+  async function createInitialCustomers() {
+    try {
+      console.log("Starting to create customers...");
+  
+      await createCustomer({ 
+        username: 'brittd', 
+        password: 'password1',
+        email: 'brittney@gmail.com',
+        firstname: 'Brittney',
+        lastname: 'DeWitt',
+        phone_number: '111-222-3333',
+        role: 'admin' 
+      });
+      await createCustomer({ 
+        username: 'jordanr', 
+        password: 'password2',
+        email: 'jordan@gmail.com',
+        firstname: 'Jordan',
+        lastname: 'Rose',
+        phone_number: '111-222-3333',
+        role: 'admin' 
+      });
+      await createCustomer({ 
+        username: 'amib', 
+        password: 'password3',
+        email: 'ami@gmail.com',
+        firstname: 'Ami',
+        lastname: 'Bray',
+        phone_number: '111-222-3333',
+        role: 'admin' 
+      });
+      await createCustomer({ 
+        username: 'emilya', 
+        password: 'password4',
+        email: 'Emily@gmail.com',
+        firstname: 'Emily',
+        lastname: 'Arelano',
+        phone_number: '111-222-3333',
+        role: 'admin' 
+      });
+      console.log("Finished creating customers!");
+    } catch (error) {
+      console.error("Error creating customers!");
+      throw error;
+    }
+  }
+
+  async function createInitialAddresses() {
+    try {
+        const [brittney, jordan, ami, emily] = await getAllCustomers();
+
+        console.log("Starting to create addresses...");
+        await createAddress({
+            customer_id: brittney.id,
+            street_number: "111",
+            street: "green street",
+            city: "green city",
+            state: "green state",
+            zip: "11111"
+        });
+
+        await createAddress({
+            customer_id: jordan.id,
+            street_number: "222",
+            street: "blue street",
+            city: "blue city",
+            state: "blue state",
+            zip: "22222"
+        });
+
+        await createAddress({
+            customer_id: ami.id,
+            street_number: "333",
+            street: "orange street",
+            city: "orange city",
+            state: "orange state",
+            zip: "33333"
+        });
+
+        await createAddress({
+            customer_id: emily.id,
+            street_number: "444",
+            street: "red street",
+            city: "red city",
+            state: "red state",
+            zip: "44444"
+        });
+        console.log("Finished creating addresses!");
+    } catch (error) {
+        console.log("Error creating addresses!");
+        throw error;
+    }
+}
 
   async function rebuildDB() {
     try {
       client.connect();
-  
       await dropTables();
       await createTables();
+      await createInitialCustomers()
+      await createInitialAddresses()
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
     }
   }
 
-  rebuildDB()
+  rebuildDB().catch(console.error).finally(() => client.end());
