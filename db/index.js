@@ -9,19 +9,6 @@ const client = new Client({
  * customer Methods
  */
 
-async function getAllCustomers() {
-    try {
-      const { rows } = await client.query(`
-        SELECT id, username, password, email, firstname, lastname, phone_number, role
-        FROM customers;
-      `);
-    
-      return rows;
-    } catch (error) {
-      throw error;
-    }
-  }
-
 async function createCustomer({ 
     username, 
     password,
@@ -50,26 +37,6 @@ async function createCustomer({
  * addresses Methods
  */
 
-async function createAddress({
-    customer_id,
-    street_number,
-    street,
-    city,
-    state,
-    zip
-  }) {
-    try {
-      const { rows: [ address ] } = await client.query(`
-        INSERT INTO addresses(customer_id, street_number, street, city, state, zip) 
-        VALUES($1, $2, $3, $4, $5, $6)
-        RETURNING *;
-      `, [customer_id, street_number, street, city, state, zip]);
-  
-      return address
-    } catch (error) {
-      throw error;
-    }
-  }
 
 /**
  * invetory Methods
@@ -80,4 +47,4 @@ async function createAddress({
  */
 
 
-module.exports = { client, getAllCustomers, createCustomer, createAddress }
+module.exports = { client, createCustomer }

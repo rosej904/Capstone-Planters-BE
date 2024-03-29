@@ -1,5 +1,5 @@
 
-const { client, getAllCustomers, createCustomer, createAddress } = require('./index');
+const { client, createCustomer } = require('./index');
 
 async function dropTables() {
   try {
@@ -116,52 +116,6 @@ async function createTables() {
     }
   }
 
-  async function createInitialAddresses() {
-    try {
-        const [brittney, jordan, ami, emily] = await getAllCustomers();
-
-        console.log("Starting to create addresses...");
-        await createAddress({
-            customer_id: brittney.id,
-            street_number: "111",
-            street: "green street",
-            city: "green city",
-            state: "green state",
-            zip: "11111"
-        });
-
-        await createAddress({
-            customer_id: jordan.id,
-            street_number: "222",
-            street: "blue street",
-            city: "blue city",
-            state: "blue state",
-            zip: "22222"
-        });
-
-        await createAddress({
-            customer_id: ami.id,
-            street_number: "333",
-            street: "orange street",
-            city: "orange city",
-            state: "orange state",
-            zip: "33333"
-        });
-
-        await createAddress({
-            customer_id: emily.id,
-            street_number: "444",
-            street: "red street",
-            city: "red city",
-            state: "red state",
-            zip: "44444"
-        });
-        console.log("Finished creating addresses!");
-    } catch (error) {
-        console.log("Error creating addresses!");
-        throw error;
-    }
-}
 
   async function rebuildDB() {
     try {
@@ -169,7 +123,6 @@ async function createTables() {
       await dropTables();
       await createTables();
       await createInitialCustomers()
-      await createInitialAddresses()
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
