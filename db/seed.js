@@ -1,5 +1,6 @@
 
-const { client, getAllCustomers, createCustomer, createAddress } = require('./index');
+const client  = require('./client');
+const { getAllCustomers, createCustomer, createAddress } = require('./index');
 
 async function dropTables() {
   try {
