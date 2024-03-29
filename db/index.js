@@ -31,14 +31,14 @@ async function createCustomer({
     role
   }) {
     try {
-      const { rows: [ user ] } = await client.query(`
+      const { rows: [ customer ] } = await client.query(`
         INSERT INTO customers(username, password, email, firstname, lastname, phone_number, role) 
         VALUES($1, $2, $3, $4, $5, $6, $7) 
         ON CONFLICT (username) DO NOTHING 
         RETURNING *;
       `, [username, password, email, firstname, lastname, phone_number, role]);
   
-      return user;
+      return customer;
     } catch (error) {
       throw error;
     }
