@@ -1,5 +1,6 @@
 const client = require('./client');
 const bcrypt = require("bcrypt")
+const {createAddress} = require("./addresses")
 const salt_count = 2
 
 
@@ -67,21 +68,33 @@ async function createCustomer({
     firstname,
     lastname,
     phone_number,
-    role
+    role,
+    address
   }) {
     try {
         let hashedPassword = await bcrypt.hash(password, salt_count)
-        const { rows: [ customers ] } = await client.query(`
-            INSERT INTO customers(username, password, email, firstname, lastname, phone_number, role) 
-            VALUES($1, $2, $3, $4, $5, $6, $7) 
-            ON CONFLICT (username) DO NOTHING 
-            RETURNING *;
+        const { rows: [ customer ] } = await client.query(`
+        INSERT INTO customers(username, password, email, firstname, lastname, phone_number, role) 
+        VALUES($1, $2, $3, $4, $5, $6, $7) 
+        ON CONFLICT (username) DO NOTHING 
+        RETURNING *;
         `, [username, hashedPassword, email, firstname, lastname, phone_number, role]);
+        
+        if (address){
+            await createAddress({
+                customer_id: customer.id, 
+                street_number: address.street_number, 
+                street: address.street, 
+                city: address.city,
+                state: address.state,
+                zip: address.zip
+            });
+        } 
 
-        return customers;
+        return customer;
     } catch (error) {
         throw error;
     }
-  }
+    }
 
   module.exports = { getAllCustomers, getCustomerById, getCustByUsername, createCustomer }

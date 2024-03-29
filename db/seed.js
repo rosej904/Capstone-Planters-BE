@@ -81,7 +81,14 @@ async function createTables() {
         firstname: 'Brittney',
         lastname: 'DeWitt',
         phone_number: '111-222-3333',
-        role: 'admin' 
+        role: 'admin',
+        address: {
+          street_number: "111",
+          street: "green street",
+          city: "green city",
+          state: "green state",
+          zip: "11111"
+      }
       });
       await createCustomer({ 
         username: 'jordanr', 
@@ -122,14 +129,14 @@ async function createTables() {
         const [brittney, jordan, ami, emily] = await getAllCustomers();
 
         console.log("Starting to create addresses...");
-        await createAddress({
-            customer_id: brittney.id,
-            street_number: "111",
-            street: "green street",
-            city: "green city",
-            state: "green state",
-            zip: "11111"
-        });
+        // await createAddress({
+        //     customer_id: brittney.id,
+        //     street_number: "111",
+        //     street: "green street",
+        //     city: "green city",
+        //     state: "green state",
+        //     zip: "11111"
+        // });
 
         await createAddress({
             customer_id: jordan.id,
