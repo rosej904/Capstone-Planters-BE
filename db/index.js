@@ -20,3 +20,6 @@ const client = new Client({
 /**
  * invetory_type Methods
  */
+
+
+module.exports = { client }

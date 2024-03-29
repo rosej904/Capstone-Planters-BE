@@ -68,3 +68,18 @@ async function createTables() {
       throw error;
     }
   }
+
+
+  async function rebuildDB() {
+    try {
+      client.connect();
+  
+      await dropTables();
+      await createTables();
+    } catch (error) {
+      console.log("Error during rebuildDB")
+      throw error;
+    }
+  }
+
+  rebuildDB()
