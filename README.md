@@ -1,1 +1,1 @@
-READ ME
+Week 1 Scrum Master Jordan Rose
