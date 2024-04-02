@@ -1,6 +1,20 @@
 
 const client = require('./client');
 
+async function getAddressByID(custId) {
+    try {
+        const { rows: [address] } = await client.query(`
+        SELECT *
+        FROM addresses
+        WHERE customer_id=$1;
+        `,[custId]);
+
+      return address;
+    } catch (error) {
+      throw error;
+    }
+}
+
 async function createAddress({
     customer_id,
     street_number,
@@ -22,4 +36,4 @@ async function createAddress({
     }
   }
 
-  module.exports = { createAddress }
+  module.exports = { getAddressByID, createAddress }

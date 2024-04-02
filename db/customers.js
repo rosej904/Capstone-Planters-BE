@@ -1,6 +1,6 @@
 const client = require('./client');
 const bcrypt = require("bcrypt")
-const {createAddress} = require("./addresses")
+const {createAddress, getAddressByID} = require("./addresses")
 const salt_count = 2
 
 
@@ -17,7 +17,7 @@ async function getAllCustomers() {
     } catch (error) {
       throw error;
     }
-  }
+}
 
 async function getCustomerById(custId) {
     try {
@@ -27,11 +27,7 @@ async function getCustomerById(custId) {
         WHERE id=$1;
         `,[custId]);
 
-        const { rows: address } = await client.query(`
-        SELECT street_number, street, city, state, zip
-        FROM addresses
-        WHERE id=$1;
-        `,[custId]);
+        const address = await getAddressByID(custId)
 
         customer.address = address
         return customer;
@@ -59,7 +55,7 @@ async function getCustByUsername(userName) {
     } catch (error) {
       throw error;
     }
-  }
+}
 
 async function createCustomer({ 
     username, 
