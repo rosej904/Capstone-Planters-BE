@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const {createAddress, getAddressByID} = require("./addresses")
 const salt_count = 2
 
-
+//---Gets and returns all customers and associated customer address---
 async function getAllCustomers() {
     try {
         const { rows: customerIds } = await client.query(`
@@ -19,6 +19,7 @@ async function getAllCustomers() {
     }
 }
 
+//---Gets and returns specific customer and associated customer address---
 async function getCustomerById(custId) {
     try {
         const { rows: [customer] } = await client.query(`
@@ -36,6 +37,7 @@ async function getCustomerById(custId) {
     }
 }
 
+//---NOT CURRENTLY USED Gets and returns specific customer and associated customer address---
 async function getCustByUsername(userName) {
     try {
       const { rows: [ user ] } = await client.query(`
@@ -57,6 +59,7 @@ async function getCustByUsername(userName) {
     }
 }
 
+//---creates customer row in customers table. can also accept customer address as part of customer object---
 async function createCustomer({ 
     username, 
     password,

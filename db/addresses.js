@@ -1,6 +1,7 @@
 
 const client = require('./client');
 
+//---gets and returns address object by customer_id---
 async function getAddressByID(custId) {
     try {
         const { rows: [address] } = await client.query(`
@@ -15,6 +16,8 @@ async function getAddressByID(custId) {
     }
 }
 
+
+//---creates address row in addresses table---
 async function createAddress({
     customer_id,
     street_number,

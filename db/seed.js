@@ -1,12 +1,11 @@
-
 const client  = require('./client');
 const { getAllCustomers, createCustomer, createAddress } = require('./index');
 
+// ---Dropping tables in order if they exist---
 async function dropTables() {
   try {
     console.log("Starting to drop tables...");
 
-    // have to make sure to drop in correct order
     await client.query(`
       DROP TABLE IF EXISTS shipments;
       DROP TABLE IF EXISTS order_products;
@@ -26,12 +25,12 @@ async function dropTables() {
   }
 }
 
+//---creating tables in order---
 async function createTables() {
     try {
       console.log("Starting to build tables...");
-  
-      await client.query(`
 
+      await client.query(`
           CREATE TABLE customers (
             id SERIAL PRIMARY KEY,
             username varchar(255) UNIQUE NOT NULL,
@@ -115,10 +114,11 @@ async function createTables() {
     }
   }
 
+  //---seeding db with new customer data---
   async function createInitialCustomers() {
     try {
       console.log("Starting to create customers...");
-  
+
       await createCustomer({ 
         username: 'brittd', 
         password: 'password1',
@@ -169,11 +169,12 @@ async function createTables() {
     }
   }
 
+  //---Seeding db with new address data---
   async function createInitialAddresses() {
     try {
+        console.log("Starting to create addresses...");
         const [brittney, jordan, ami, emily] = await getAllCustomers();
 
-        console.log("Starting to create addresses...");
         // await createAddress({
         //     customer_id: brittney.id,
         //     street_number: "111",
@@ -216,6 +217,7 @@ async function createTables() {
     }
 }
 
+  //---rebuildDB runs all required functions to create new instance of DB tables and data---
   async function rebuildDB() {
     try {
       client.connect();
@@ -229,4 +231,5 @@ async function createTables() {
     }
   }
 
+  //---runs rebuildDB and disconnects from client when done---
   rebuildDB().catch(console.error).finally(() => client.end());
