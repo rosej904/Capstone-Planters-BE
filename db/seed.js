@@ -158,7 +158,7 @@ async function createTables() {
         password: 'password4',
         email: 'Emily@gmail.com',
         firstname: 'Emily',
-        lastname: 'Arelano',
+        lastname: 'Arellano',
         phone_number: '111-222-3333',
         role: 'admin' 
       });
