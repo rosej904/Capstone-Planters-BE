@@ -1,5 +1,6 @@
 module.exports = {
   ...require("./customers"),
   ...require("./addresses"),
-  ...require("./inventory")
+  ...require("./inventory"),
+  ...require("./inventorytype")
 }
