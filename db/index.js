@@ -1,4 +1,5 @@
 module.exports = {
   ...require("./customers"),
-  ...require("./addresses")
+  ...require("./addresses"),
+  ...require("./inventory")
 }
