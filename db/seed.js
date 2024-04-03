@@ -470,7 +470,8 @@ async function createInitialCartEntries() {
     const shov = await getInventoryByName("shovel");
     const tulip = await getInventoryByName("tulip");
 
-    await addToCart({ 
+    //variable will contain the fully updated cart including productIds & updated price
+    returnCart = await addToCart({ 
       customer_id: brittney.id,
       quantity: 2,
       product: sberry

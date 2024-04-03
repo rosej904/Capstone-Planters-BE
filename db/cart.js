@@ -9,10 +9,22 @@ async function getCartByCustId(custId) {
             * FROM cart
             where customer_id=$1;
         `,[custId]);
-
-      return cart[0];
+        return cart[0];
     } catch (error) {
       throw error;
+    }
+}
+
+async function getCartProductsByCartId(cartId) {
+    try {
+        const { rows: cartProducts } = await client.query(`
+            SELECT 
+            * FROM cart_products
+            where cart_id=$1;
+        `,[cartId]);
+        return cartProducts;
+    } catch (error) {
+    throw error;
     }
 }
 
@@ -67,12 +79,15 @@ async function addToCart(body) {
             VALUES($1) 
             RETURNING *;
             `, [customer_id]);
-
             if (product){
                 await addCartProducts(cartEntry.id, quantity, product.id)
             }
-        }   
-        return
+        }
+
+        let displayCart = await getCartByCustId(customer_id)
+        displayCart.products = await getCartProductsByCartId(displayCart.id)
+
+        return displayCart
 
     } catch (error) {
         throw error;
