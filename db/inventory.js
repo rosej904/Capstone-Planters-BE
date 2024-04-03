@@ -1,5 +1,29 @@
 const client = require('./client');
 
+async function updateInventory(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ invRow ] } = await client.query(`
+        UPDATE inventory
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return invRow;
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function createInventory(body){
     const {type_id, name, description, price, quantity} = body;
     try {
@@ -56,4 +80,4 @@ async function getInventoryById(id) {
     }
 }
 
-module.exports = {createInventory, getInventoryByName, getInventoryById}
+module.exports = {createInventory, updateInventory, getInventoryByName, getInventoryById}

@@ -16,6 +16,29 @@ async function getAddressByID(custId) {
     }
 }
 
+async function updateAddress(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ addressRow ] } = await client.query(`
+        UPDATE addresses
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return addressRow;
+    } catch (error) {
+        throw error;
+    }
+}
 
 //---creates address row in addresses table---
 async function createAddress({
@@ -39,4 +62,4 @@ async function createAddress({
     }
   }
 
-  module.exports = { getAddressByID, createAddress }
+  module.exports = { getAddressByID, createAddress, updateAddress }

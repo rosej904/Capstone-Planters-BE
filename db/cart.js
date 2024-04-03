@@ -45,7 +45,7 @@ async function updateCartPrice(id, productId, quantity) {
     }
 }
 
-//---updates cart with fields passed by object---
+//---updates cart, accepts id and object with fields to update---
 async function updateCart(id, fields = {}) {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
@@ -68,7 +68,7 @@ async function updateCart(id, fields = {}) {
     } catch (error) {
         throw error;
     }
-    }
+}
 
 //---adds products to existing cart---
 async function addCartProducts(id, quantity, productId) {
