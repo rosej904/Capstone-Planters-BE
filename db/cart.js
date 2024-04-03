@@ -23,6 +23,7 @@ async function getCartProductsByCartId(cartId) {
             where cart_id=$1;
         `,[cartId]);
         return cartProducts;
+        
     } catch (error) {
     throw error;
     }
@@ -84,8 +85,8 @@ async function addToCart(body) {
             }
         }
 
-        let displayCart = await getCartByCustId(customer_id)
-        displayCart.products = await getCartProductsByCartId(displayCart.id)
+        //cart builder
+        const displayCart = cartBuilder(customer_id)
 
         return displayCart
 
@@ -94,6 +95,22 @@ async function addToCart(body) {
     }
 }
 
+//---can be called with customer_id to return cart plus items
+async function cartBuilder(custId){
+    let displayCart = await getCartByCustId(custId)
+    const products = await getCartProductsByCartId(displayCart.id)
+    const productsArr = []
+    displayCart.items={}
+
+    for (i = 0; i < products.length; i++){
+        productsArr[i] = products[i]["inventory_id"];
+     }
+
+    for (id in productsArr){
+        displayCart.items[productsArr[id]]= await getInventoryById(productsArr[id]);
+    }
+    return displayCart
+}
 
     
 
