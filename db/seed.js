@@ -517,12 +517,12 @@ async function createInitialOrder(){
     console.log("Creating Order . . . ")
     // const [seeds, indoor, flowers, supplies, tools] = await getOrders()
     await createOrder({
-      order_id: null,
-      cart_id: null,
-      customer_id: "The perfect addition to any vegetable garden. Beans are a vine and as such will also need a structure to grow on.",
-      order_date: 2.00,
-      total_price: 60,
-      processed: null,
+      order_id: 1,
+      cart_id: 1,
+      customer_id: 1,
+      order_date: '2024-01-04 22:22:03',
+      total_price: 5,
+      processed: true,
     });
 console.log("Finished creating order!");
 } catch (error) {
