@@ -1,5 +1,29 @@
 const client = require('./client');
 
+async function updateInventory(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ invRow ] } = await client.query(`
+        UPDATE inventory
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return invRow;
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function createInventory(body){
     const {type_id, name, description, price, quantity} = body;
     try {
@@ -14,6 +38,46 @@ async function createInventory(body){
     } catch (error) {
         throw error;
     }
-    }
+}
 
-module.exports = {createInventory}
+async function getInventoryByName(name) {
+    try {
+        const { rows: [ inventoryItem ] } = await client.query(`
+        SELECT *
+        FROM inventory
+        WHERE LOWER(name) LIKE LOWER('%${name}%')
+        `);
+    
+        if (!name) {
+        throw {
+            name: "NoInventoryByName",
+            message: "A product with that name was not found"
+        }
+        }
+        return inventoryItem;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getInventoryById(id) {
+    try {
+        const { rows: [ inventoryItem ] } = await client.query(`
+        SELECT *
+        FROM inventory
+        WHERE id = ($1)
+        `, [ id ]);
+    
+        if (!id) {
+        throw {
+            name: "NoInventoryByID",
+            message: "A product with that ID was not found"
+        }
+        }
+        return inventoryItem;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {createInventory, updateInventory, getInventoryByName, getInventoryById}
