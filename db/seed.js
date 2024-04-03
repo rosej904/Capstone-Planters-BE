@@ -88,7 +88,7 @@ async function createTables() {
             customer_id INTEGER REFERENCES customers(id),
             order_date DATE NOT NULL DEFAULT CURRENT_DATE,
             total_price NUMERIC NOT NULL,
-            processed BOOLEAN NOT NULL
+            processed BOOLEAN NOT NULL DEFAULT FALSE
           );
 
           CREATE TABLE order_products (

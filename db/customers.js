@@ -59,6 +59,30 @@ async function getCustByUsername(userName) {
     }
 }
 
+async function updateCustomer(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ custRow ] } = await client.query(`
+        UPDATE customers
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return custRow;
+    } catch (error) {
+        throw error;
+    }
+}
+
 //---creates customer row in customers table. can also accept customer address as part of customer object---
 async function createCustomer({ 
     username, 
@@ -96,4 +120,4 @@ async function createCustomer({
     }
     }
 
-  module.exports = { getAllCustomers, getCustomerById, getCustByUsername, createCustomer }
+  module.exports = { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer }
