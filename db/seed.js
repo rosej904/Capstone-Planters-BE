@@ -1,5 +1,5 @@
 const client  = require('./client');
-const { getAllCustomers, createCustomer, createAddress, createInventory, createInventoryType, getAllTypes} = require('./index');
+const { getAllCustomers, createCustomer, createAddress, createInventory, createInventoryType, getAllTypes, createOrder} = require('./index');
 
 // ---Dropping tables in order if they exist---
 async function dropTables() {
@@ -463,6 +463,28 @@ async function createInitialInventory(){
 
 }
 
+
+
+
+async function createInitialOrder(){
+  try{
+    console.log("Creating Order . . . ")
+    // const [seeds, indoor, flowers, supplies, tools] = await getOrders()
+    await createOrder({
+      order_id: null,
+      cart_id: null,
+      customer_id: "The perfect addition to any vegetable garden. Beans are a vine and as such will also need a structure to grow on.",
+      order_date: 2.00,
+      total_price: 60,
+      processed: null,
+    });
+console.log("Finished creating order!");
+} catch (error) {
+    console.log("Error creating order!");
+    throw error;
+}
+}
+
   //---rebuildDB runs all required functions to create new instance of DB tables and data---
   async function rebuildDB() {
     try {
@@ -473,6 +495,7 @@ async function createInitialInventory(){
       await createInitialAddresses()
       await createInitialInventoryType()
       await createInitialInventory()
+      await createInitialOrder
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
