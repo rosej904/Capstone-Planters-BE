@@ -3,5 +3,7 @@ module.exports = {
   ...require("./addresses"),
   ...require("./inventory"),
   ...require("./inventorytype"),
-  ...require("./cart")
+  ...require("./cart"),
+  ...require("./orders"),
+  ...require("./order_products")
 }
