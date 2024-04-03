@@ -14,6 +14,46 @@ async function createInventory(body){
     } catch (error) {
         throw error;
     }
-    }
+}
 
-module.exports = {createInventory}
+async function getInventoryByName(name) {
+    try {
+        const { rows: [ inventoryItem ] } = await client.query(`
+        SELECT *
+        FROM inventory
+        WHERE LOWER(name) LIKE LOWER('%${name}%')
+        `);
+    
+        if (!name) {
+        throw {
+            name: "NoInventoryByName",
+            message: "A product with that name was not found"
+        }
+        }
+        return inventoryItem;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getInventoryById(id) {
+    try {
+        const { rows: [ inventoryItem ] } = await client.query(`
+        SELECT *
+        FROM inventory
+        WHERE id = ($1)
+        `, [ id ]);
+    
+        if (!id) {
+        throw {
+            name: "NoInventoryByID",
+            message: "A product with that ID was not found"
+        }
+        }
+        return inventoryItem;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {createInventory, getInventoryByName, getInventoryById}
