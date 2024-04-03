@@ -33,21 +33,42 @@ async function getCartProductsByCartId(cartId) {
 async function updateCartPrice(id, productId, quantity) {
     try {
         const product = await getInventoryById(productId)
-
         totalPrice = product.price * quantity
-
-        await client.query(`
-        UPDATE cart
-        SET total_price = $1
-        WHERE id=$2
-        `, [totalPrice, id]);
-
+        const cartObj = {
+            total_price: totalPrice
+        }
+        await updateCart(id, cartObj)
         return
 
     } catch (error) {
         throw error;
     }
 }
+
+//---updates cart with fields passed by object---
+async function updateCart(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ cartRow ] } = await client.query(`
+        UPDATE cart
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return cartRow;
+    } catch (error) {
+        throw error;
+    }
+    }
 
 //---adds products to existing cart---
 async function addCartProducts(id, quantity, productId) {
