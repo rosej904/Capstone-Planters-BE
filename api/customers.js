@@ -166,6 +166,22 @@ customersRouter.patch('/:custId', requireUser, async (req, res, next) => {
   if (phone_number) {
     updateFields.phone_number = phone_number;
   }
+
+  if (address) {
+    res.status(200);
+      throw new RouteError({
+        name: 'UpdateAddressError',
+        message: 'You cannot update an address from here'
+    })
+  }
+
+  if (role) {
+    res.status(200);
+    throw new RouteError({
+      name: 'UpdateRoleError',
+      message: 'Admin functionality has not been created yet'
+  })
+  }
     const originalCust = await getCustomerById(custId);
 
     if (originalCust.id === req.user.id) {
