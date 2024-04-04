@@ -1,5 +1,5 @@
 const client  = require('./client');
-const { getAllCustomers, createCustomer, createAddress, createInventoryType, createInventory, getInventoryByName, getAllTypes, addToCart } = require('./index');
+const { getAllCustomers, createCustomer, createAddress, createInventoryType, createInventory, getInventoryByName, getAllTypes, addToCart, createOrder, createOrderProducts} = require('./index');
 
 // ---Dropping tables in order if they exist---
 async function dropTables() {
@@ -84,7 +84,7 @@ async function createTables() {
 
           CREATE TABLE orders (
             id SERIAL PRIMARY KEY,
-            cart INTEGER REFERENCES cart(id),
+            cart_id INTEGER REFERENCES cart(id),
             customer_id INTEGER REFERENCES customers(id),
             order_date DATE NOT NULL DEFAULT CURRENT_DATE,
             total_price NUMERIC NOT NULL,
@@ -509,6 +509,44 @@ async function createInitialCartEntries() {
   }
 }
 
+
+
+
+async function createInitialOrder(){
+  try{
+    console.log("Creating Order . . . ")
+
+    await createOrder({
+      order_id: 1,
+      cart_id: 1,
+      customer_id: 1,
+      order_date: '2024-01-04 22:22:03',
+      total_price: 5,
+      processed: true,
+    });
+console.log("Finished creating order!");
+} catch (error) {
+    console.log("Error creating order!");
+    throw error;
+}
+}
+
+async function createInitialOrderProducts(){
+  try{
+    console.log("Creating Order Products . . . ")
+    
+    await createOrderProducts({
+      order_id: 1,
+      inventory_id: 1,
+      quantity: 1,
+    });
+console.log("Finished creating order products!");
+} catch (error) {
+    console.log("Error creating order products!");
+    throw error;
+}
+}
+
   //---rebuildDB runs all required functions to create new instance of DB tables and data---
   async function rebuildDB() {
     try {
@@ -520,6 +558,8 @@ async function createInitialCartEntries() {
       await createInitialInventoryType()
       await createInitialInventory()
       await createInitialCartEntries()
+      await createInitialOrder ()
+      await createInitialOrderProducts()
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
