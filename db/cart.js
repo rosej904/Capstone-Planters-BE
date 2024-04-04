@@ -1,6 +1,33 @@
 const client = require("./client");
 const {getInventoryById} = require("./inventory")
 
+//---gets all carts (admin function) object by cust ID---
+async function getAllCarts() {
+    try {
+        const { rows: carts } = await client.query(`
+            SELECT 
+            * FROM cart
+        `,);
+        return carts;
+    } catch (error) {
+      throw error;
+    }
+}
+
+//get cart by cart_id
+async function getCartById(id) {
+    try {
+        const { rows: carts } = await client.query(`
+            SELECT 
+            * FROM cart
+            WHERE id=$1
+        `,[id]);
+        return carts;
+    } catch (error) {
+      throw error;
+    }
+}
+
 //---gets cart object by cust ID---
 async function getCartByCustId(custId) {
     try {
@@ -26,22 +53,6 @@ async function getCartProductsByCartId(cartId) {
         
     } catch (error) {
     throw error;
-    }
-}
-
-//---updates cart table total_price---
-async function updateCartPrice(id, productId, quantity) {
-    try {
-        const product = await getInventoryById(productId)
-        totalPrice = product.price * quantity
-        const cartObj = {
-            total_price: totalPrice
-        }
-        await updateCart(id, cartObj)
-        return
-
-    } catch (error) {
-        throw error;
     }
 }
 
@@ -86,6 +97,39 @@ async function addCartProducts(id, quantity, productId) {
     }
 }
 
+//---adds products to existing cart---
+async function updateCartProducts(cart_id, inventory_id, quantity ) {
+
+    try {
+        const { rows: [ cartProduct ] } = await client.query(`
+        UPDATE cart_products
+        SET quantity=$2
+        WHERE cart_id=$1 AND inventory_id=$3
+        RETURNING *;
+        `, [cart_id, quantity, inventory_id]);
+        await updateCartPrice(cart_id)
+
+        return cartProduct;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function destroyCartProducts(id, productId, quantity) {
+    try {
+        const { rows: [ cartProduct ] } = await client.query(`
+        DELETE FROM cart_products 
+        WHERE cart_id=$1 AND inventory_id=$2
+        RETURNING *;
+        `, [id, productId]);
+        await updateCartPrice(id, productId, quantity)
+
+        return cartProduct;
+    } catch (error) {
+        throw error;
+    }
+}
+
 //---creates new cart row for cust, if cust alredy has cart row calls addCartProducts for existing cart---
 async function addToCart(body) {
     try {
@@ -116,23 +160,50 @@ async function addToCart(body) {
     }
 }
 
+
+//---cart utils---
 //---can be called with customer_id to return cart plus items
 async function cartBuilder(custId){
     let displayCart = await getCartByCustId(custId)
     const products = await getCartProductsByCartId(displayCart.id)
-    const productsArr = []
-    displayCart.items={}
+    items=[]
+    
 
-    for (i = 0; i < products.length; i++){
-        productsArr[i] = products[i]["inventory_id"];
-     }
-
-    for (id in productsArr){
-        displayCart.items[productsArr[id]]= await getInventoryById(productsArr[id]);
+    for (i of products){
+        items[i.inventory_id] = await getInventoryById(i.inventory_id);
+        items[i.inventory_id].quantity = i.quantity
+        displayCart.items = items.filter(function (el) {
+            return el != null;
+          });
     }
+
     return displayCart
+}
+
+//---updates cart table total_price---
+async function updateCartPrice(id, productId, quantity) {
+    try {
+        const products = await getCartProductsByCartId(id)
+        let totalPrice = 0
+        
+        for (i of products){
+            
+            let inv = await getInventoryById(i.inventory_id)
+            tempPrice = i.quantity * inv.price
+            totalPrice = totalPrice+tempPrice
+        }
+        
+        const cartObj = {
+            total_price: totalPrice
+        }
+        await updateCart(id, cartObj)
+        return
+
+    } catch (error) {
+        throw error;
+    }
 }
 
     
 
-module.exports = { addToCart }
+module.exports = { addToCart, getCartByCustId, getCartProductsByCartId, cartBuilder, getAllCarts, updateCartProducts, destroyCartProducts }

@@ -1,19 +1,18 @@
 const client = require('./client');
 const bcrypt = require("bcrypt")
-const {createAddress, getAddressByID} = require("./addresses")
+const {createAddress} = require("./addresses")
 const salt_count = 2
 
 //---Gets and returns all customers and associated customer address---
 async function getAllCustomers() {
     try {
-        const { rows: customerIds } = await client.query(`
-            SELECT id
-            FROM customers;
-        `);
-        const customers = await Promise.all(customerIds.map(customer => getCustomerById( customer.id )
-    ));
+        const { rows: customers } = await client.query(`
+        SELECT *
+        FROM customers
+        `,);
 
-      return customers;
+        return customers;
+
     } catch (error) {
       throw error;
     }
@@ -28,31 +27,28 @@ async function getCustomerById(custId) {
         WHERE id=$1;
         `,[custId]);
 
-        const address = await getAddressByID(custId)
-
-        customer.address = address
         return customer;
     } catch (error) {
         throw error;
     }
 }
 
-//---NOT CURRENTLY USED Gets and returns specific customer and associated customer address---
+//---Gets and returns specific customer and associated customer address---
 async function getCustByUsername(userName) {
     try {
+
       const { rows: [ user ] } = await client.query(`
         SELECT *
         FROM customers
         WHERE username=$1
       `, [ userName ]);
-  
-      if (!user) {
+    if (!user) {
         throw {
-          name: "UserNotFoundError",
-          message: "A user with that username does not exist"
+            name: "UserNotFoundError",
+            message: "A user with that username does not exist"
         }
-      }
-  
+    }
+
       return user;
     } catch (error) {
       throw error;
