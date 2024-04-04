@@ -5,12 +5,17 @@ const JWT_SECRET = process.env.JWT_SECRET;
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const {requireUser, RouteError} = require("./utils")
-const { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer } = require('../db');
+const { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer, getAddressByID } = require('../db');
 
-//---ounts get all customers route - returns all customers w/address---
+//---mounts get all customers route - returns all customers w/address---
 customersRouter.get('/', async (req, res, next) => {
     try {
       const customers = await getAllCustomers();
+
+      await Promise.all(customers.map(async customer => {
+        const address = await getAddressByID(customer.id)
+        customer.address = address
+    }))
     
       res.send({
         customers
@@ -25,6 +30,9 @@ customersRouter.get('/:custId', async (req, res, next) => {
     const {custId} = req.params
     try {
         const customer = await getCustomerById(custId);
+        const address = await getAddressByID(customer.id)
+        customer.address = address
+
 
         res.send({
         customer
@@ -37,7 +45,6 @@ customersRouter.get('/:custId', async (req, res, next) => {
 //---mounts - customers login route - accepts object username&pw and returns object with token---
 customersRouter.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
-
   
     try {
       if (!username || !password) {
@@ -46,8 +53,8 @@ customersRouter.post('/login', async (req, res, next) => {
           message: "Please supply both a username and password"
         });
       }
+
       const cust = await getCustByUsername(username);
-  
       if (cust && await bcrypt.compare(password, cust.password)) {
         let userId = cust.id
         const token = jwt.sign({ 
