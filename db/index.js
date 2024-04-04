@@ -5,5 +5,6 @@ module.exports = {
   ...require("./inventorytype"),
   ...require("./cart"),
   ...require("./orders"),
-  ...require("./order_products")
+  ...require("./order_products"),
+  ...require("./shipment")
 }
