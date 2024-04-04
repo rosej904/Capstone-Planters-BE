@@ -200,5 +200,19 @@ customersRouter.patch('/:custId', requireUser, async (req, res, next) => {
   }
 });
 
+customersRouter.delete('/:custId', requireUser, async (req, res, next) => {
+    const {custId} = req.params
+    const originalCust = await getCustomerById(custId);
+    try {
+    res.status(200);
+    throw new RouteError({
+        name: 'DeleteUserError',
+        message: 'Admin functionality has not been created yet'
+    })
+    } catch (error) {
+        next(error);
+    }
+  
+  });
 
 module.exports = customersRouter;

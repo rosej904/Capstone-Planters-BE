@@ -28,9 +28,11 @@ async function getCustomerById(custId) {
         WHERE id=$1;
         `,[custId]);
 
-        const address = await getAddressByID(custId)
+        if (customer){
+            const address = await getAddressByID(custId)
 
-        customer.address = address
+            customer.address = address
+        }
         return customer;
     } catch (error) {
         throw error;
