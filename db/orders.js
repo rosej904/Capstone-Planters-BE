@@ -1,5 +1,6 @@
 const client = require('./client');
 
+
 async function createOrder(body){
   const {cart, customer_id, order_date, total_price, processed} = body;
   try {
@@ -8,7 +9,7 @@ async function createOrder(body){
       VALUES($1, $2, $3, $4, $5) 
       RETURNING *;
       `, [cart, customer_id, order_date, total_price, processed]);
-  
+
 
       return order;
   } catch (error) {

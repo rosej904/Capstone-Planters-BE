@@ -515,7 +515,7 @@ async function createInitialCartEntries() {
 async function createInitialOrder(){
   try{
     console.log("Creating Order . . . ")
-    // const [seeds, indoor, flowers, supplies, tools] = await getOrders()
+
     await createOrder({
       order_id: 1,
       cart_id: 1,
