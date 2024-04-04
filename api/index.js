@@ -43,6 +43,10 @@ apiRouter.use(async (req, res, next) => {
 const customersRouter = require('./customers');
 apiRouter.use('/customers', customersRouter);
 
+//---mounts /cart route---
+const cartRouter = require('./cart');
+apiRouter.use('/cart', cartRouter);
+
 //---mounts error handler middleware---
 apiRouter.use(errorHandler)
 

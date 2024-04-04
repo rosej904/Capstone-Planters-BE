@@ -42,7 +42,6 @@ async function getCustByUsername(userName) {
         FROM customers
         WHERE username=$1
       `, [ userName ]);
-    console.log(user)
     if (!user) {
         throw {
             name: "UserNotFoundError",

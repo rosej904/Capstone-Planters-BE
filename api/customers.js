@@ -58,7 +58,8 @@ customersRouter.post('/login', async (req, res, next) => {
       if (cust && await bcrypt.compare(password, cust.password)) {
         let userId = cust.id
         const token = jwt.sign({ 
-          id: cust.id, 
+          id: cust.id,
+          role: cust.role,
           username: cust.username
         }, JWT_SECRET, {
           expiresIn: '1w'
