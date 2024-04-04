@@ -84,7 +84,7 @@ async function createTables() {
 
           CREATE TABLE orders (
             id SERIAL PRIMARY KEY,
-            cart INTEGER REFERENCES cart(id),
+            cart_id INTEGER REFERENCES cart(id),
             customer_id INTEGER REFERENCES customers(id),
             order_date DATE NOT NULL DEFAULT CURRENT_DATE,
             total_price NUMERIC NOT NULL,
