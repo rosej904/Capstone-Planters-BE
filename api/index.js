@@ -47,6 +47,10 @@ apiRouter.use('/customers', customersRouter);
 const cartRouter = require('./cart');
 apiRouter.use('/cart', cartRouter);
 
+// ---mounts /order route---
+const orderRouter = require('./orders');
+apiRouter.use('/order', orderRouter);
+
 //---mounts error handler middleware---
 apiRouter.use(errorHandler)
 
