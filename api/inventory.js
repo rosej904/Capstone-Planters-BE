@@ -1,4 +1,5 @@
 const express = require('express');
+
 const inventoryRouter = express.Router();
 
 const { getAllInventory,
@@ -84,3 +85,4 @@ inventoryRouter.delete('/:id', async (req, res, next) => {
 });
 
 module.exports = inventoryRouter
+
