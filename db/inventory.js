@@ -1,28 +1,6 @@
 const client = require('./client');
 
-async function updateInventory(id, fields = {}) {
-    const setString = Object.keys(fields).map(
-        (key, index) => `"${ key }"=$${ index + 1 }`
-    ).join(', ');
-    
-    // return early if this is called without fields
-    if (setString.length === 0) {
-        return;
-    }
-    
-    try {
-        const { rows: [ invRow ] } = await client.query(`
-        UPDATE inventory
-        SET ${ setString }
-        WHERE id=${ id }
-        RETURNING *;
-        `, Object.values(fields));
-    
-        return invRow;
-    } catch (error) {
-        throw error;
-    }
-}
+
 
 async function createInventory(body){
     const {type_id, name, description, price, quantity} = body;
@@ -39,6 +17,31 @@ async function createInventory(body){
         throw error;
     }
 }
+
+async function deleteInventory(id) {
+    try {
+        const { rows: [product] } = await client.query(`
+            DELETE FROM inventory
+            WHERE id=$1
+            RETURNING *;
+        `, [id]);
+        return product;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getAllInventory(){
+    try {
+        const { rows: product } = await client.query(`
+        SELECT * FROM inventory
+    `,);
+        return product;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 async function getInventoryByName(name) {
     try {
@@ -80,4 +83,28 @@ async function getInventoryById(id) {
     }
 }
 
-module.exports = {createInventory, updateInventory, getInventoryByName, getInventoryById}
+async function updateInventory(id, fields = {}) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    // return early if this is called without fields
+    if (setString.length === 0) {
+        return;
+    }
+    
+    try {
+        const { rows: [ invRow ] } = await client.query(`
+        UPDATE inventory
+        SET ${ setString }
+        WHERE id=${ id }
+        RETURNING *;
+        `, Object.values(fields));
+    
+        return invRow;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {createInventory, updateInventory, getInventoryByName, getInventoryById, getAllInventory, deleteInventory}
