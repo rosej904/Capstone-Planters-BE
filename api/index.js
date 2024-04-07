@@ -49,6 +49,9 @@ apiRouter.use('/customers', customersRouter);
 const cartsRouter = require('./cart');
 apiRouter.use('/carts', cartsRouter);
 
+const inventoryRouter= require('./inventory');
+apiRouter.use('/inventory', require('./inventory'));
+
 apiRouter.all('*', (req, res) => {
   throw new RouteError({
     status: 404,

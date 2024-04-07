@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const inventoryRouter = express.Router();
 
 const { getAllInventory,
     getInventoryById,
@@ -9,7 +9,7 @@ const { getAllInventory,
 const { requireUser, RouteError } = require('./utils');
 
     //GET - /api/inventory - get all
-    router.get('/', async (req, res, next) => {
+    inventoryRouter.get('/', async (req, res, next) => {
         try {
             const products = await getAllInventory();
             res.send(products);
@@ -19,7 +19,7 @@ const { requireUser, RouteError } = require('./utils');
     });  
 
     // GET - /api/inventory/:id - get a single product by id
-router.get('/:id', async (req, res, next) => {
+inventoryRouter.get('/:id', async (req, res, next) => {
     try {
         const productId = req.params.id;
         const product = await getInventoryById(productId);
@@ -30,7 +30,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST - /api/inventory - create a new product
-router.patch('/', requireUser, async (req, res, next) => {
+inventoryRouter.post('/', requireUser, async (req, res, next) => {
     if (req.user.role == "admin") {
         try {
             const product = await createInventory(req.body);
@@ -48,7 +48,7 @@ router.patch('/', requireUser, async (req, res, next) => {
 });
 
 // PUT - /api/inventory/:id - update a product by id
-router.put('/:id', requireUser, async (req, res, next) => {
+inventoryRouter.put('/:id', requireUser, async (req, res, next) => {
     if (req.user.role == "admin") {
         try {
             const product = await updateInventory(req.params.id, req.body);
@@ -64,3 +64,23 @@ router.put('/:id', requireUser, async (req, res, next) => {
         });
     }
 });
+
+// DELETE - /api/inventory/:id - delete a single product by id
+inventoryRouter.delete('/:id', async (req, res, next) => {
+    if (req.user.role == "admin") {
+        try {
+            const product = await deleteInventory(req.params.id);
+            res.send(product);
+        } catch (error) {
+            next(error);
+        }
+    } else {
+        throw new RouteError({
+          status: 401,
+          name: "Unauthorized",
+          message: "You are not authorized to delete products"
+        });
+    }
+});
+
+module.exports = inventoryRouter
