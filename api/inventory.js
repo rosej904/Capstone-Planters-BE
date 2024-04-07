@@ -42,7 +42,25 @@ router.patch('/', requireUser, async (req, res, next) => {
         throw new RouteError({
           status: 401,
           name: "Unauthorized",
-          message: "You are not authorized to view all carts"
+          message: "You are not authorized to add new products."
+        });
+    }
+});
+
+// PUT - /api/inventory/:id - update a product by id
+router.put('/:id', requireUser, async (req, res, next) => {
+    if (req.user.role == "admin") {
+        try {
+            const product = await updateInventory(req.params.id, req.body);
+            res.send(product);
+        } catch (error) {
+            next(error);
+        }
+    } else {
+        throw new RouteError({
+          status: 401,
+          name: "Unauthorized",
+          message: "You are not authorized to update products"
         });
     }
 });
