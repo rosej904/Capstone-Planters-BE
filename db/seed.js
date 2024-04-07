@@ -1,5 +1,5 @@
 const client = require('./client');
-const { getAllCustomers, createCustomer, createAddress, createInventoryType, createInventory, getInventoryByName, getAllTypes, addToCart, createOrder, createOrderProducts, createShipment } = require('./index');
+const { getAllCustomers, createCustomer, createAddress, createInventoryType, createInventory, getInventoryByName, getAllTypes, addToCart, createOrder, createOrderProducts, addCartProducts, updateCartPrice, getCartByCustId } = require('./index');
 
 // ---Dropping tables in order if they exist---
 async function dropTables() {
@@ -11,7 +11,7 @@ async function dropTables() {
       DROP TABLE IF EXISTS order_products;
       DROP TABLE IF EXISTS orders;
       DROP TABLE IF EXISTS cart_products;
-      DROP TABLE IF EXISTS cart;
+      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
       DROP TABLE IF EXISTS inventory_type;
       DROP TABLE IF EXISTS addresses;
@@ -67,7 +67,7 @@ async function createTables() {
             imgUrl varchar(255) NOT NULL
           );
 
-          CREATE TABLE cart (
+          CREATE TABLE carts (
             id SERIAL PRIMARY KEY,
             customer_id INTEGER REFERENCES customers(id),
             updated_date DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -77,14 +77,14 @@ async function createTables() {
 
           CREATE TABLE cart_products (
             id SERIAL PRIMARY KEY,
-            cart_id INTEGER REFERENCES cart(id),
+            cart_id INTEGER REFERENCES carts(id),
             inventory_id INTEGER REFERENCES inventory(id),
             quantity INTEGER NOT NULL
           );
 
           CREATE TABLE orders (
             id SERIAL PRIMARY KEY,
-            cart_id INTEGER REFERENCES cart(id),
+            cart_id INTEGER REFERENCES carts(id),
             customer_id INTEGER REFERENCES customers(id),
             order_date DATE NOT NULL DEFAULT CURRENT_DATE,
             total_price NUMERIC NOT NULL,
@@ -101,7 +101,7 @@ async function createTables() {
           CREATE TABLE shipments (
             id SERIAL PRIMARY KEY,
             order_id INTEGER REFERENCES orders(id),
-            shipment_date DATE NOT NULL DEFAULT CURRENT_DATE,
+            shipment_date varchar(255) NOT NULL,
             tracking_number varchar(255) NOT NULL
           );
 
@@ -470,37 +470,26 @@ async function createInitialCartEntries() {
     const shov = await getInventoryByName("shovel");
     const tulip = await getInventoryByName("tulip");
 
-    //variable will contain the fully updated cart including productIds & updated price
-    const returnCart = await addToCart({
-      customer_id: brittney.id,
-      quantity: 2,
-      product: sberry
-    });
+    let returnCart = await addToCart(brittney.id);
+    await addCartProducts(returnCart.id, sberry.id, 2)
+    await updateCartPrice(returnCart.id)
 
-    await addToCart({
-      customer_id: jordan.id,
-      quantity: 1,
-      product: shov
-    });
 
-    await addToCart({
-      customer_id: ami.id,
-      quantity: 5,
-      product: tulip
-    });
+    returnCart = await addToCart(jordan.id);
+    await addCartProducts(returnCart.id, shov.id, 1)
+    await updateCartPrice(returnCart.id)
 
-    await addToCart({
-      customer_id: emily.id,
-      quantity: 1,
-      product: sberry
-    });
+    returnCart = await addToCart(ami.id);
+    await addCartProducts(returnCart.id, tulip.id, 5)
+    await updateCartPrice(returnCart.id)
 
-    await addToCart({
-      customer_id: emily.id,
-      quantity: 2,
-      product: shov
-    });
+    returnCart = await addToCart(emily.id);
+    await addCartProducts(returnCart.id, sberry.id, 1)
+    await updateCartPrice(returnCart.id)
 
+    const existingCart = await getCartByCustId(emily.id, false)
+    await addCartProducts(existingCart.id, shov.id, 2)
+    await updateCartPrice(existingCart.id)
 
     console.log("Finished creating initial cart data!");
   } catch (error) {
@@ -509,20 +498,15 @@ async function createInitialCartEntries() {
   }
 }
 
-
-
-
+//---Seeding db with new order data---
 async function createInitialOrder() {
   try {
     console.log("Creating Order . . . ")
 
     await createOrder({
-      order_id: 1,
       cart_id: 1,
       customer_id: 1,
-      order_date: '2024-01-04 22:22:03',
-      total_price: 5,
-      processed: true,
+      total_price: 5
     });
     console.log("Finished creating order!");
   } catch (error) {
@@ -531,6 +515,7 @@ async function createInitialOrder() {
   }
 }
 
+//---Seeding db with new order data---
 async function createInitialOrderProducts() {
   try {
     console.log("Creating Order Products . . . ")
@@ -547,30 +532,6 @@ async function createInitialOrderProducts() {
   }
 }
 
-
-// shipment 
-async function createInitialShipmentTable() {
-  try {
-    console.log("Creating shipment table!");
-
-    // get order by id
-
-
-    await createShipment({
-      order_id: 1,
-      tracking_number: "123445",
-
-    });
-
-    console.log("Finish creating shipment table!");
-
-  } catch (error) {
-    console.log("Error creating shipment table!");
-    throw error;
-  }
-}
-
-
 //---rebuildDB runs all required functions to create new instance of DB tables and data---
 async function rebuildDB() {
   try {
@@ -584,7 +545,6 @@ async function rebuildDB() {
     await createInitialCartEntries()
     await createInitialOrder()
     await createInitialOrderProducts()
-    await createInitialShipmentTable()
   } catch (error) {
     console.log("Error during rebuildDB")
     throw error;
