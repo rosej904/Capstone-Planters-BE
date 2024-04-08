@@ -1,6 +1,6 @@
 const client = require('./client');
 const bcrypt = require("bcrypt")
-const {createAddress} = require("./addresses")
+const { createAddress } = require("./addresses")
 const salt_count = 2
 
 //---Gets and returns all customers and associated customer address---
@@ -14,7 +14,7 @@ async function getAllCustomers() {
         return customers;
 
     } catch (error) {
-      throw error;
+        throw error;
     }
 }
 
@@ -25,7 +25,7 @@ async function getCustomerById(custId) {
         SELECT *
         FROM customers
         WHERE id=$1;
-        `,[custId]);
+        `, [custId]);
 
         return customer;
     } catch (error) {
@@ -37,42 +37,42 @@ async function getCustomerById(custId) {
 async function getCustByUsername(userName) {
     try {
 
-      const { rows: [ user ] } = await client.query(`
+        const { rows: [user] } = await client.query(`
         SELECT *
         FROM customers
         WHERE username=$1
-      `, [ userName ]);
-    if (!user) {
-        throw {
-            name: "UserNotFoundError",
-            message: "A user with that username does not exist"
+      `, [userName]);
+        if (!user) {
+            throw {
+                name: "UserNotFoundError",
+                message: "A user with that username does not exist"
+            }
         }
-    }
 
-      return user;
+        return user;
     } catch (error) {
-      throw error;
+        throw error;
     }
 }
 
 async function updateCustomer(id, fields = {}) {
     const setString = Object.keys(fields).map(
-        (key, index) => `"${ key }"=$${ index + 1 }`
+        (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
-    
+
     // return early if this is called without fields
     if (setString.length === 0) {
         return;
     }
-    
+
     try {
-        const { rows: [ custRow ] } = await client.query(`
+        const { rows: [custRow] } = await client.query(`
         UPDATE customers
-        SET ${ setString }
-        WHERE id=${ id }
+        SET ${setString}
+        WHERE id=${id}
         RETURNING *;
         `, Object.values(fields));
-    
+
         return custRow;
     } catch (error) {
         throw error;
@@ -80,40 +80,43 @@ async function updateCustomer(id, fields = {}) {
 }
 
 //---creates customer row in customers table. can also accept customer address as part of customer object---
-async function createCustomer({ 
-    username, 
+async function createCustomer({
+    username,
     password,
     email,
     firstname,
     lastname,
     phone_number,
-    role,
-    address
-  }) {
+    role
+}) {
     try {
         let hashedPassword = await bcrypt.hash(password, salt_count)
-        const { rows: [ customer ] } = await client.query(`
+        const { rows: [customer] } = await client.query(`
         INSERT INTO customers(username, password, email, firstname, lastname, phone_number, role) 
         VALUES($1, $2, $3, $4, $5, $6, $7) 
         ON CONFLICT (username) DO NOTHING 
         RETURNING *;
         `, [username, hashedPassword, email, firstname, lastname, phone_number, role]);
-        
-        if (address){
-            await createAddress({
-                customer_id: customer.id, 
-                street_number: address.street_number, 
-                street: address.street, 
-                city: address.city,
-                state: address.state,
-                zip: address.zip
-            });
-        } 
 
         return customer;
     } catch (error) {
         throw error;
     }
-    }
+}
 
-  module.exports = { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer }
+//---deletes customer by id---
+async function destroyCustomer(id) {
+    try {
+        const { rows: [cartProduct] } = await client.query(`
+        DELETE FROM customers
+        WHERE id=$1
+        RETURNING *;
+        `, [id]);
+
+        return cartProduct;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer, destroyCustomer }

@@ -146,6 +146,34 @@ async function destroyCartProducts(cart_id, inventory_id) {
     }
 }
 
+async function destroyCartProductsU(cart_id) {
+    try {
+        const { rows: [cartProduct] } = await client.query(`
+        DELETE FROM cart_products 
+        WHERE cart_id=$1
+        RETURNING *;
+        `, [cart_id]);
+
+        return cartProduct;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function destroyCart(custId) {
+    try {
+        const { rows: [cartProduct] } = await client.query(`
+        DELETE FROM carts
+        WHERE customer_id=$1
+        RETURNING *;
+        `, [custId]);
+
+        return cartProduct;
+    } catch (error) {
+        throw error;
+    }
+}
+
 //---creates new cart row for cust, if cust alredy has cart row calls addCartProducts for existing cart---
 async function addToCart(customer_id) {
     try {
@@ -227,4 +255,4 @@ async function updateCartPrice(id) {
 
 
 
-module.exports = { addToCart, getCartByCustId, getCartProductsByCartId, cartBuilder, getAllCarts, updateCartProducts, addCartProducts, destroyCartProducts, updateCartPrice, updateCart, getCartByCustId, getCartProductsByCartId }
+module.exports = { addToCart, getCartByCustId, getCartProductsByCartId, cartBuilder, getAllCarts, updateCartProducts, addCartProducts, destroyCartProducts, destroyCartProductsU, destroyCart, updateCartPrice, updateCart, getCartByCustId, getCartProductsByCartId }
