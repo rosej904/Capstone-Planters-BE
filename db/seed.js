@@ -36,7 +36,7 @@ async function createTables() {
             id SERIAL PRIMARY KEY,
             username varchar(255) UNIQUE NOT NULL,
             password varchar(255) NOT NULL,
-            email varchar(255) NOT NULL,
+            email varchar(255) UNIQUE NOT NULL,
             firstname varchar(255) NOT NULL,
             lastname varchar(255) NOT NULL,
             phone_number varchar(255) NOT NULL,
@@ -127,14 +127,7 @@ async function createInitialCustomers() {
       firstname: 'Brittney',
       lastname: 'DeWitt',
       phone_number: '111-222-3333',
-      role: 'admin',
-      address: {
-        street_number: "111",
-        street: "green street",
-        city: "green city",
-        state: "green state",
-        zip: "11111"
-      }
+      role: 'admin'
     });
     await createCustomer({
       username: 'jordanr',
@@ -176,14 +169,14 @@ async function createInitialAddresses() {
     console.log("Starting to create addresses...");
     const [brittney, jordan, ami, emily] = await getAllCustomers();
 
-    // await createAddress({
-    //     customer_id: brittney.id,
-    //     street_number: "111",
-    //     street: "green street",
-    //     city: "green city",
-    //     state: "green state",
-    //     zip: "11111"
-    // });
+    await createAddress({
+      customer_id: brittney.id,
+      street_number: "111",
+      street: "green street",
+      city: "green city",
+      state: "green state",
+      zip: "11111"
+    });
 
     await createAddress({
       customer_id: jordan.id,

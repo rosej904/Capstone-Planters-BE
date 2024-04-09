@@ -1,5 +1,19 @@
 const client = require('./client');
 
+async function getAllInventory() {
+    try {
+        const { rows: inventory } = await client.query(`
+        SELECT *
+        FROM inventory
+        `,);
+
+        return inventory;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function updateInventory(id, fields = {}) {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
@@ -80,4 +94,18 @@ async function getInventoryById(id) {
     }
 }
 
-module.exports = {createInventory, updateInventory, getInventoryByName, getInventoryById}
+async function destroyInventory(id) {
+    try {
+        const { rows: [inventory] } = await client.query(`
+        DELETE FROM inventory
+        WHERE id=$1
+        RETURNING *;
+        `, [id]);
+
+        return inventory;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {getAllInventory, createInventory, updateInventory, getInventoryByName, getInventoryById, destroyInventory}
