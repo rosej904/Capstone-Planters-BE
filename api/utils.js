@@ -8,6 +8,15 @@ class RouteError {
     }
 }
 
+//--- set cors policy---
+function setCorsPolicy(req, res, next) {
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+    res.header("Access-Control-Allow-Headers", "Authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    next();
+  };
+
 //---middleware to check if user is set in request and returns 401 if not
 function requireUser(req, res, next) {
     if (!req.user) {
@@ -33,6 +42,7 @@ function errorHandler(err, req, res, next) {
 
 
 module.exports = {
+    setCorsPolicy,
     requireUser,
     errorHandler,
     RouteError
