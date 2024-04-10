@@ -36,7 +36,7 @@ function errorHandler(err, req, res, next) {
 
     console.log(`ERROR: ${err.name} ${err.message}`)
     const status = err.status || 400
-    res.status(status).send(err.name + ": " + err.message)
+    res.status(status).send({name:err.name,message:err.message})
     next()
 }
 
