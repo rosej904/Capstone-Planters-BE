@@ -58,7 +58,7 @@ customersRouter.post('/login', async (req, res, next) => {
   try {
     if (!username || !password) {
       throw new RouteError({
-        name: "MissingCredentialsError",
+        name: "LoginError",
         message: "Please supply both a username and password"
       });
     }
@@ -66,6 +66,7 @@ customersRouter.post('/login', async (req, res, next) => {
     const cust = await getCustByUsername(username);
     if (cust && await bcrypt.compare(password, cust.password)) {
       let userId = cust.id
+      let custUserName = cust.username
       const token = jwt.sign({
         id: cust.id,
         role: cust.role,
@@ -75,8 +76,8 @@ customersRouter.post('/login', async (req, res, next) => {
       });
 
       res.send({
+        name: "LoginSuccess",
         message: "Login Succesful!",
-        userId,
         token
       });
     } else {
