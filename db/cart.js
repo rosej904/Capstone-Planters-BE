@@ -234,10 +234,8 @@ async function updateCartPrice(id) {
     try {
         const products = await getCartProductsByCartId(id)
         let totalPrice = 0
-
         for (i of products) {
-
-            let inv = await getInventoryById(i.inventory_id)
+            let inv = await getInventoryById(i.inventory_id) 
             tempPrice = i.quantity * inv.price
             totalPrice = totalPrice + tempPrice
         }

@@ -8,9 +8,6 @@ const { RouteError } = require("./utils")
 
 const { getCustomerById } = require('../db');
 
-const { setCorsPolicy } = require("./utils")
-apiRouter.use(setCorsPolicy)
-
 //---middleware to set user - DO NOT mount any routes above this unless required to bypass this middleware
 apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
