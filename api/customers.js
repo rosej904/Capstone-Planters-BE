@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const { requireUser, RouteError } = require("./utils")
 const { getAllCustomers, getCustomerById, getCustByUsername, createCustomer, updateCustomer, getAddressByID, createAddress, updateAddress, destroyCustomer, destroyAddress, getCartByCustId, destroyCartProductsU, destroyCart } = require('../db');
 
+
 //---mounts get all customers route - returns all customers w/address---
 customersRouter.get('/', requireUser, async (req, res, next) => {
   try {
@@ -65,8 +66,6 @@ customersRouter.post('/login', async (req, res, next) => {
 
     const cust = await getCustByUsername(username);
     if (cust && await bcrypt.compare(password, cust.password)) {
-      let userId = cust.id
-      let custUserName = cust.username
       const token = jwt.sign({
         id: cust.id,
         role: cust.role,
@@ -74,12 +73,12 @@ customersRouter.post('/login', async (req, res, next) => {
       }, JWT_SECRET, {
         expiresIn: '1w'
       });
-
-      res.send({
-        name: "LoginSuccess",
-        message: "Login Succesful!",
-        token
-      });
+      res.cookie("jwtCust", token, {path:"/", httpOnly:"true",sameSite:"none", secure:"true"})
+          res.send({
+              name: "LoginSuccess",
+              message: "Login Succesful!",
+              token
+            });
     } else {
       throw new RouteError({
         status: 401,
@@ -88,6 +87,26 @@ customersRouter.post('/login', async (req, res, next) => {
       });
     }
   } catch (error) {
+    next(error);
+  }
+});
+
+customersRouter.post('/logout', async (req, res, next) => {
+  
+  try {
+
+    const auth = req.cookies.jwtCust
+    if (auth == null) {
+      res.send({name: "NoAuth", message:"NoAuth"})
+    }else{
+    res.clearCookie("jwtCust", {domain:".localhost",path:"/"})
+    res.clearCookie("isLoggedIn", {domain:".localhost",path:"/"})
+    return res.sendStatus(200)
+    }
+
+
+  } catch (error) {
+    
     next(error);
   }
 });
@@ -336,5 +355,6 @@ customersRouter.delete('/:custId', requireUser, async (req, res, next) => {
     next(error);
   }
 });
+
 
 module.exports = customersRouter;
