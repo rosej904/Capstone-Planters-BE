@@ -8,12 +8,22 @@ const { getAllInventory,
     updateInventory,
     destroyInventory } = require('../db/inventory');
 const { requireUser, RouteError } = require('./utils');
+const { getAllTypes } = require('../db');
 
 //GET - /api/inventory - get all
 inventoryRouter.get('/', async (req, res, next) => {
     try {
         const products = await getAllInventory();
         res.send(products);
+    } catch (error) {
+        next(error);
+    }
+});
+
+inventoryRouter.get('/types', async (req, res, next) => {
+    try {
+        const types = await getAllTypes();
+        res.send(types);
     } catch (error) {
         next(error);
     }
