@@ -252,7 +252,8 @@ async function createInitialInventory() {
       name: "Green Bean",
       description: "The perfect addition to any vegetable garden. Beans are a vine and as such will also need a structure to grow on.",
       price: 200,
-      quantity: 60
+      quantity: 60,
+      imgUrl: "greenBeans.jpg"
     });
 
     await createInventory({
@@ -260,7 +261,8 @@ async function createInitialInventory() {
       name: "Strawberry",
       description: "Sweet red berry perfect for dessert. Vines can easily spread. Grows in a patch close to the ground.",
       price: 200,
-      quantity: 20
+      quantity: 20,
+      imgUrl: "strawberries.jpg" 
     });
 
     await createInventory({
@@ -268,7 +270,8 @@ async function createInitialInventory() {
       name: "Tomato",
       description: "Perfect fruit for using in sauces or as a topping on a sandwich. Start seeds indoors and move outside once the plant is 12 inches tall.",
       price: 250,
-      quantity: 50
+      quantity: 50,
+      imgUrl: "tomatoes.jpg"
     });
 
     await createInventory({
@@ -276,7 +279,8 @@ async function createInitialInventory() {
       name: "Red Pepper",
       description: "Perfect for salads or stuffed peppers. 1-2 plants can yeild as many as 45 peppers in a short time.",
       price: 150,
-      quantity: 80
+      quantity: 80,
+      imgUrl: "redPeppers.jpg"
     });
 
     await createInventory({
@@ -284,7 +288,8 @@ async function createInitialInventory() {
       name: "Carrot",
       description: "EEEEHHH, What's Up Doc? These carrots are perfect for all your cooking needs. Contrary to popular belief, carrots can be grown in window boxes.",
       price: 125,
-      quantity: 100
+      quantity: 100,
+      imgUrl: "carrots.jpg"
     });
 
     await createInventory({
@@ -292,7 +297,8 @@ async function createInitialInventory() {
       name: "Monstera",
       description: "The large green leaves of the monstera plant gives it it's name. Some of the leaves will have large holes, making them look like claws.",
       price: 4000,
-      quantity: 10
+      quantity: 10,
+      imgUrl: "monstera.jpg"
     });
 
     await createInventory({
@@ -300,7 +306,8 @@ async function createInitialInventory() {
       name: "Succulent",
       description: "Succulents require very little water and are perfect for those of us who forget to water the plants.",
       price: 500,
-      quantity: 60
+      quantity: 60,
+      imgUrl: "succulents.jpg"
     });
 
     await createInventory({
@@ -308,7 +315,8 @@ async function createInitialInventory() {
       name: "Snake Plant",
       description: "This zebra striped hardy plant adds a sense of drama to any indoor space.",
       price: 2000,
-      quantity: 40
+      quantity: 40,
+      imgUrl: "snakePlant.jpg"
     });
 
     await createInventory({
@@ -316,7 +324,8 @@ async function createInitialInventory() {
       name: "Spider Plant",
       description: "The spider plant thrives best in an area where it can branch out and it's babies can drop down. When a baby plant has formed air roots, simply trim it and stick in dirt for a new plant.",
       price: 500,
-      quantity: 20
+      quantity: 20,
+      imgUrl: "spiderPlant.jpg" 
     });
 
     await createInventory({
@@ -324,7 +333,8 @@ async function createInitialInventory() {
       name: "Money Tree",
       description: "Sorry, it's not real money, but the money tree is said to bring luck and money into your house.",
       price: 1500,
-      quantity: 50
+      quantity: 50,
+      imgUrl: "moneyTree.jpg"
     });
 
     await createInventory({
@@ -332,7 +342,8 @@ async function createInitialInventory() {
       name: "Sunflower",
       description: "This bright yellow, annual flower towers over everything else in the gardem. The seeds can be roasted for a great treat, but watch out because the birds like to eat the seeds too.",
       price: 1000,
-      quantity: 50
+      quantity: 50,
+      imgUrl: "sunflowers.jpg"
     });
 
     await createInventory({
@@ -340,7 +351,8 @@ async function createInitialInventory() {
       name: "Tulip",
       description: "These beautiful spring perennials will multiply on their own in your garden due to being a bulb plant. They are also like candy for deer and will attrack them from miles away.",
       price: 1000,
-      quantity: 40
+      quantity: 40,
+      imgUrl: "tulips.jpg"
     });
 
     await createInventory({
@@ -348,7 +360,8 @@ async function createInitialInventory() {
       name: "Dahlia",
       description: "These beautiful, round, perennial flowers look like living tissue paper pompoms. They come in every color imaginable and some even have multiple colors in a flower.",
       price: 1200,
-      quantity: 60
+      quantity: 60,
+      imgUrl: "dahlia.jpg"
     });
 
     await createInventory({
@@ -356,7 +369,8 @@ async function createInitialInventory() {
       name: "Rose",
       description: "This traditional rose plant is a hardy perennial. Watch out, it has mean thorns.",
       price: 2500,
-      quantity: 80
+      quantity: 80,
+      imgUrl: "roses.jpg"
     });
 
     await createInventory({
@@ -364,7 +378,8 @@ async function createInitialInventory() {
       name: "Beared Iris",
       description: "These perennial bulb flowers are tall and create many six petaled flowers per plant. The beareded iris flowers are wavy or fuzzy in apperance",
       price: 1000,
-      quantity: 80
+      quantity: 80,
+      imgUrl: "beardedIris.jpg"
     });
 
     await createInventory({
@@ -372,7 +387,8 @@ async function createInitialInventory() {
       name: "Raised Bed Soil",
       description: "Raised bed soil is perfectly designed to give your raised garden the right blend of nutrients to grow your planst nice and strong. 1.5 cu. ft. bag will cover 3'X3' bed in 1 inces of soil.",
       price: 1000,
-      quantity: 60
+      quantity: 60,
+      imgUrl: "soil.jpg"
     });
 
     await createInventory({
@@ -380,7 +396,8 @@ async function createInitialInventory() {
       name: "Weed Killer",
       description: "Use this shaker-top container of weed killing pellets in your flower garden. Do not use on a vegitable or food garden.",
       price: 2000,
-      quantity: 20
+      quantity: 20,
+      imgUrl: "weedKiller.jpg"
     });
 
     await createInventory({
@@ -388,7 +405,8 @@ async function createInitialInventory() {
       name: "Organic Fertilizer",
       description: "This organic fertilizer is safe to use on vegetables and food plants. Apply the fertilizer to the soil before planting and mix into the soil.",
       price: 2500,
-      quantity: 40
+      quantity: 40,
+      imgUrl: "fertilizer.jpg"
     });
 
     await createInventory({
@@ -396,7 +414,8 @@ async function createInitialInventory() {
       name: "Brown Mulch",
       description: "2 CU F bag of mulch will cover 4x4 foot garden bed in 1 inch of mulch.",
       price: 250,
-      quantity: 100
+      quantity: 100,
+      imgUrl: "mulch.jpg"
     });
 
     await createInventory({
@@ -404,15 +423,17 @@ async function createInitialInventory() {
       name: "Mexican River Rock",
       description: ".25 CU F bacg of 3-5 inch Mexican river rock will cover appx. half foot square area.",
       price: 2500,
-      quantity: 80
+      quantity: 80,
+      imgUrl: "rocks.jpg"
     });
 
     await createInventory({
       type_id: tools.id,
-      name: "Two Wheel Gorrila Cart",
-      description: "With a 4.5 CU F or 300 LB capacity, the two wheeled Gorrilla Cart will become your favorite wheelbarrow.",
+      name: "Gorrila Cart",
+      description: "With a 4.5 CU F or 300 LB capacity, the Gorrilla Cart will become your favorite wheelbarrow.",
       price: 6000,
-      quantity: 10
+      quantity: 10,
+      imgUrl: "wheelbarrow.jpg"
     });
 
     await createInventory({
@@ -420,7 +441,8 @@ async function createInitialInventory() {
       name: "Ego Electric Lawn Mower",
       description: "This 21 inch electric walk-behind lawn mower is self-propelled. It comes with a 56V rechargable battery and charger.",
       price: 60000,
-      quantity: 10
+      quantity: 10,
+      imgUrl: "mower.jpg"
     });
 
     await createInventory({
@@ -428,7 +450,8 @@ async function createInitialInventory() {
       name: "39 inch Digging Shovel",
       description: "This digging shovel is the perfect fit for anyone under 5.5 feet tall. This will dig holes through the toughest lawn conditions.",
       price: 3200,
-      quantity: 20
+      quantity: 20,
+      imgUrl: "shovel.jpg"
     });
 
     await createInventory({
@@ -436,7 +459,8 @@ async function createInitialInventory() {
       name: "Basic Lawn Rake",
       description: "This basic, plastic lawn rake will make leaf pick up easy.",
       price: 800,
-      quantity: 100
+      quantity: 100,
+      imgUrl: "rake.jpg"
     });
 
     await createInventory({
@@ -444,7 +468,8 @@ async function createInitialInventory() {
       name: "Lawn Bags",
       description: "These large paper bags will allow you to put your yard waste and leaves on the curb for pick-up in most cities.",
       price: 200,
-      quantity: 200
+      quantity: 200,
+      imgUrl: "lawnBags.jpg"
     });
 
     console.log("Finished creating inventory!");
