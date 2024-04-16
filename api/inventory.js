@@ -1,6 +1,7 @@
 const express = require('express');
 const inventoryRouter = express.Router();
 const { getAllInventory, getInventoryById, createInventory, updateInventory, destroyInventory } = require('../db/inventory');
+const { getAllTypes } = require('../db');
 const { requireUser, RouteError } = require('./utils');
 
 //GET - /api/inventory - get all
@@ -8,6 +9,15 @@ inventoryRouter.get('/', async (req, res, next) => {
     try {
         const products = await getAllInventory();
         res.send(products);
+    } catch (error) {
+        next(error);
+    }
+});
+
+inventoryRouter.get('/types', async (req, res, next) => {
+    try {
+        const types = await getAllTypes();
+        res.send(types);
     } catch (error) {
         next(error);
     }
