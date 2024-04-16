@@ -1,12 +1,7 @@
 const express = require('express');
-
 const inventoryRouter = express.Router();
-
-const { getAllInventory,
-    getInventoryById,
-    createInventory,
-    updateInventory,
-    destroyInventory } = require('../db/inventory');
+const { getAllInventory, getInventoryById, createInventory, updateInventory, destroyInventory } = require('../db/inventory');
+const { getAllTypes } = require('../db');
 const { requireUser, RouteError } = require('./utils');
 const { getAllTypes } = require('../db');
 

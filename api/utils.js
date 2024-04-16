@@ -10,6 +10,7 @@ class RouteError {
 
 //---middleware to check if user is set in request and returns 401 if not
 function requireUser(req, res, next) {
+    
     if (!req.user) {
         res.status(401);
         next({
