@@ -2,7 +2,7 @@ const express = require('express');
 const cartsRouter = express.Router();
 require("dotenv").config();
 const { requireUser, RouteError } = require("./utils")
-const { getAllCarts, cartBuilder, getCartProductsByCartId, destroyCartProducts, updateCartProducts, addToCart, addCartProducts, updateCartPrice, getCartByCustId, updateCart, createOrder, createOrderProducts } = require('../db');
+const { getInventoryById, updateInventory, getAllCarts, cartBuilder, getCartProductsByCartId, destroyCartProducts, updateCartProducts, addToCart, addCartProducts, updateCartPrice, getCartByCustId, updateCart, createOrder, createOrderProducts } = require('../db');
 
 //---mounts get all carts (admin function) - returns all carts with details---
 cartsRouter.get('/all', requireUser, async (req, res, next) => {
@@ -119,6 +119,9 @@ cartsRouter.patch('/mycart/checkout', requireUser, async (req, res, next) => {
           inventory_id: i.id,
           quantity: i.quantity
         })
+        const currentQuantity = await getInventoryById(i.id)
+        const newQuantity = currentQuantity.quantity - i.quantity
+        await updateInventory (i.id, {quantity: newQuantity})
       }
       res.send(checkedOutCart)
     } else {
