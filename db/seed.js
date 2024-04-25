@@ -156,6 +156,42 @@ async function createInitialCustomers() {
       phone_number: '111-222-3333',
       role: 'admin'
     });
+    await createCustomer({
+      username: 'bobb',
+      password: 'password5',
+      email: 'bob@gmail.com',
+      firstname: 'Bob',
+      lastname: 'Barker',
+      phone_number: '111-222-3333',
+      role: 'customer'
+    });
+    await createCustomer({
+      username: 'drewc',
+      password: 'password6',
+      email: 'drew@gmail.com',
+      firstname: 'Drew',
+      lastname: 'Carey',
+      phone_number: '111-222-3333',
+      role: 'customer'
+    });
+    await createCustomer({
+      username: 'pats',
+      password: 'password7',
+      email: 'pat@gmail.com',
+      firstname: 'Pat',
+      lastname: 'Sajak',
+      phone_number: '111-222-3333',
+      role: 'customer'
+    });
+    await createCustomer({
+      username: 'vannaw',
+      password: 'password8',
+      email: 'vanna@gmail.com',
+      firstname: 'Vanna',
+      lastname: 'White',
+      phone_number: '111-222-3333',
+      role: 'customer'
+    });
     console.log("Finished creating customers!");
   } catch (error) {
     console.error("Error creating customers!");
@@ -167,7 +203,7 @@ async function createInitialCustomers() {
 async function createInitialAddresses() {
   try {
     console.log("Starting to create addresses...");
-    const [brittney, jordan, ami, emily] = await getAllCustomers();
+    const [brittney, jordan, ami, emily, bob, drew, pat, vanna] = await getAllCustomers();
 
     await createAddress({
       customer_id: brittney.id,
@@ -202,6 +238,42 @@ async function createInitialAddresses() {
       street: "red street",
       city: "red city",
       state: "red state",
+      zip: "44444"
+    });
+
+    await createAddress({
+      customer_id: bob.id,
+      street_number: "444",
+      street: "price street",
+      city: "price city",
+      state: "price state",
+      zip: "44444"
+    });
+
+    await createAddress({
+      customer_id: drew.id,
+      street_number: "444",
+      street: "funny street",
+      city: "funny city",
+      state: "funny state",
+      zip: "44444"
+    });
+
+    await createAddress({
+      customer_id: pat.id,
+      street_number: "444",
+      street: "wheel street",
+      city: "wheel city",
+      state: "wheel state",
+      zip: "44444"
+    });
+
+    await createAddress({
+      customer_id: vanna.id,
+      street_number: "444",
+      street: "dress street",
+      city: "dress city",
+      state: "dress state",
       zip: "44444"
     });
     console.log("Finished creating addresses!");
