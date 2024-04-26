@@ -54,6 +54,10 @@ customersRouter.get('/:custId', async (req, res, next) => {
 
 //---mounts - customers login route - accepts object username&pw and returns object with token---
 customersRouter.post('/login', async (req, res, next) => {
+  var origin = req.get('origin');
+  var host = req.get('host');
+  console.log(origin)
+  console.log(host)
   const { username, password } = req.body;
 
   try {
@@ -73,7 +77,7 @@ customersRouter.post('/login', async (req, res, next) => {
       }, JWT_SECRET, {
         expiresIn: '1w'
       });
-      res.cookie("jwtCust", token, {path:"/", httpOnly:"true",sameSite:"none", secure:"true"})
+      res.cookie("jwtCust", token, {path:"/", httpOnly:"true", secure:"true"})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -99,8 +103,8 @@ customersRouter.post('/logout', async (req, res, next) => {
     if (auth == null) {
       res.send({name: "NoAuth", message:"NoAuth"})
     }else{
-    res.clearCookie("jwtCust", {domain:".localhost",path:"/"})
-    res.clearCookie("isLoggedIn", {domain:".localhost",path:"/"})
+    res.clearCookie("jwtCust", {path:"/"})
+    res.clearCookie("isLoggedIn", {path:"/"})
     return res.sendStatus(200)
     }
 
