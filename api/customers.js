@@ -70,9 +70,7 @@ customersRouter.post('/login', async (req, res, next) => {
         id: cust.id,
         role: cust.role,
         username: cust.username
-      }, JWT_SECRET, {
-        expiresIn: '1w'
-      });
+      }, JWT_SECRET);
       res.cookie("jwtCust", token, {path:"/", httpOnly:"true",sameSite:"none", secure:"true"})
           res.send({
               name: "LoginSuccess",
