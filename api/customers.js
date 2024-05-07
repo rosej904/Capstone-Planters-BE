@@ -97,7 +97,7 @@ customersRouter.post('/logout', async (req, res, next) => {
     if (auth == null) {
       res.send({name: "NoAuth", message:"NoAuth"})
     }else{
-    res.clearCookie("jwtCust")
+    res.clearCookie("jwtCust",{path:"/"})
     return res.sendStatus(200)
     }
 
