@@ -71,7 +71,7 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-      res.cookie("jwtCust", token, {path:"/", domain: ".onrender.com", samesite: "none", httpOnly:"true", secure:"true"})
+      res.cookie("jwtCust", token, {path:"/",  domain: ".onrender.com", httpOnly:"true"})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
