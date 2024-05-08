@@ -72,7 +72,7 @@ customersRouter.post('/login', async (req, res, next) => {
         username: cust.username
       }, JWT_SECRET);
 
-      res.cookie("jwtCust", token, {path:"/"})
+      res.cookie("jwtCust", token, {path:"/", sameSite:"none"})
 
           res.send({
               name: "LoginSuccess",
