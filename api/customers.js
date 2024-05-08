@@ -71,7 +71,7 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-      res.cookie("jwtCust", token, {path:"/", httpOnly:"true", secure:"true"})
+      res.cookie("jwtCust", token, {path:"/"})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -85,25 +85,6 @@ customersRouter.post('/login', async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
-  }
-});
-
-customersRouter.post('/logout', async (req, res, next) => {
-  
-  try {
-
-    const auth = req.cookies.jwtCust
-    if (auth == null) {
-      res.send({name: "NoAuth", message:"NoAuth"})
-    }else{
-    res.clearCookie("jwtCust",{path:"/", httpOnly:"true", secure:"true"})
-    return res.sendStatus(200)
-    }
-
-
-  } catch (error) {
-    
     next(error);
   }
 });
