@@ -71,7 +71,7 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-      res.cookie("jwtCust", token, {path:"/", httpOnly:"true",sameSite:"none", secure:"true"})
+      res.cookie('jwtCust', token, {path:'/', httpOnly:'true',sameSite:'none', secure:'true'})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -99,7 +99,7 @@ customersRouter.post('/logout', async (req, res, next) => {
     }else{
       console.log("clearing cookie")
       // res.cookie("jwtCust", "null", {path:"/"})
-      res.clearCookie("jwtCust",{path:"/", domain:".onrender.com"})
+      res.clearCookie('jwtCust',{path:'/', domain:'.onrender.com'})
       res.sendStatus(204)
     
     }
