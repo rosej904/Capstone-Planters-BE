@@ -71,9 +71,7 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-
-      res.cookie("jwtCust", token, {path:"/", sameSite:"none", secure:"true"})
-
+      res.cookie('jwtCust', token, {path:'/',domain:'capstone-planters-be.onrender.com', sameSite:'none',httpOnly:'true', secure:'true', maxAge: 60 * 60 * 24 * 7})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -87,6 +85,26 @@ customersRouter.post('/login', async (req, res, next) => {
       });
     }
   } catch (error) {
+    next(error);
+  }
+});
+
+customersRouter.post('/logout', async (req, res, next) => {
+  
+  try {
+
+    const auth = req.cookies.jwtCust
+    if (auth == null) {
+      res.send({name: "NoAuth", message:"NoAuth"})
+    }else{
+      console.log("clearing cookie")
+      res.cookie('jwtCust', 'null', {path:'/',domain:'capstone-planters-be.onrender.com', sameSite:'none',httpOnly:'true', secure:'true',  expires: new Date(0)})
+      res.sendStatus(204)
+    }
+
+
+  } catch (error) {
+    
     next(error);
   }
 });
