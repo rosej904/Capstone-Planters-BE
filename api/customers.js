@@ -98,7 +98,6 @@ customersRouter.post('/logout', async (req, res, next) => {
       res.send({name: "NoAuth", message:"NoAuth"})
     }else{
       console.log("clearing cookie")
-      // res.cookie("jwtCust", "null", {path:"/"})
       res.cookie('jwtCust', 'null', {path:'/',domain:'capstone-planters-be.onrender.com', sameSite:'none',httpOnly:'true', secure:'true',  expires: new Date(0)})
       res.sendStatus(204)
     }
