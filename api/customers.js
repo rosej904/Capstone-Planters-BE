@@ -71,7 +71,9 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-      res.cookie("jwtCust", token, {path:"/", httpOnly:"true", sameSite:"none"})
+
+      res.cookie("jwtCust", token, {path:"/"})
+
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -89,24 +91,6 @@ customersRouter.post('/login', async (req, res, next) => {
   }
 });
 
-customersRouter.post('/logout', async (req, res, next) => {
-  
-  try {
-
-    const auth = req.cookies.jwtCust
-    if (auth == null) {
-      res.send({name: "NoAuth", message:"NoAuth"})
-    }else{
-    res.clearCookie("jwtCust",{path:"/", domain: ".onrender.com"})
-    return res.sendStatus(200)
-    }
-
-
-  } catch (error) {
-    
-    next(error);
-  }
-});
 
 //---mounts register new customer route - accepts customer & address object---
 customersRouter.post('/register', async (req, res, next) => {
