@@ -99,7 +99,7 @@ customersRouter.post('/logout', async (req, res, next) => {
     }else{
       console.log("clearing cookie")
       // res.cookie("jwtCust", "null", {path:"/"})
-      res.clearCookie('jwtCust',{path:'/', domain:'.onrender.com'})
+      res.clearCookie('jwtCust',{path:'/', domain:'capstone-planters-be.onrender.com'})
       res.sendStatus(204)
     
     }
