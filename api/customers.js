@@ -98,9 +98,10 @@ customersRouter.post('/logout', async (req, res, next) => {
       res.send({name: "NoAuth", message:"NoAuth"})
     }else{
       console.log("clearing cookie")
-      res.cookie("jwtCust", "null", {path:"/"})
-      // res.clearCookie("jwtCust",{path:"/", domain:".onrender.com"})
-    return res.sendStatus(204)
+      // res.cookie("jwtCust", "null", {path:"/"})
+      res.clearCookie("jwtCust",{path:"/", domain:".onrender.com"})
+      res.sendStatus(204)
+    
     }
 
 
