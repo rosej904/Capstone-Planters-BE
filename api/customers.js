@@ -99,7 +99,7 @@ customersRouter.post('/logout', async (req, res, next) => {
     }else{
       console.log("clearing cookie")
       // res.cookie("jwtCust", "null", {path:"/"})
-      // res.clearCookie('jwtCust',{path:'/', domain:'.netlify.app'})
+      cookies.set('jwtCust',{path:'/', maxAge: 0})
       res.sendStatus(204)
     
     }
