@@ -100,7 +100,7 @@ customersRouter.post('/logout', async (req, res, next) => {
       console.log(req.cookies.jwtCust)
       console.log("clearing cookie")
       // res.cookie('jwtCust', 'null', {path:'/',domain: 'capstone-planters-be.onrender.com',sameSite:'none',httpOnly:'true', secure:'true', maxAge: 0})
-      res.clearCookie('jwtCust',{path:'/',sameSite:'none',httpOnly:'true', secure:'true', maxAge: 0})
+      res.clearCookie('jwtCust',{path:'/',sameSite:'none',httpOnly:'true', secure:'true', maxAge: 60 * 60 * 24 * 7})
       res.sendStatus(204)
     }
 
