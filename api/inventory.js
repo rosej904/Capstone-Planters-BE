@@ -75,7 +75,6 @@ inventoryRouter.put('/:id', requireUser, async (req, res, next) => {
 inventoryRouter.delete('/:id', async (req, res, next) => {
     if (req.user.role == "admin") {
         try {
-            console.log(req.params.id)
             const product = await destroyInventory(req.params.id);
             res.send(product);
         } catch (error) {

@@ -9,11 +9,10 @@ const { getCustomerById } = require('../db');
 
 
 apiRouter.use(async (req, res, next) => {
-  const auth = req.cookies.jwtCust
-
-  if (auth == undefined) {
+  const auth = req.header('x-jwtCust');
+  if (auth == undefined||null) {
     next();
-  } else if (auth) {
+  } else if (auth.length >10) {
     try {
       const { id } = jwt.verify(auth, JWT_SECRET);
       if (id) {
@@ -32,7 +31,7 @@ apiRouter.use(async (req, res, next) => {
   } else {
     next({
       name: 'NoAuthTokenFound',
-      message: `Please Login`,
+      message: 'User will be anonymous',
     });
   }
 });

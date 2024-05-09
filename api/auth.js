@@ -6,14 +6,10 @@ const { requireUser, RouteError } = require("./utils")
 const { getCustomerById } = require('../db');
 
 authRouter.get('/', async (req, res, next) => {
-  
-
-  const auth = req.cookies.jwtCust
-
-    
-    if (auth == null) {
+  const auth = req.header('x-jwtCust');
+    if (auth == undefined||null) {
       res.send({name: "NoAuth", message:"NoAuth"})
-    } else if (auth) {
+    } else if (auth.length >10) {
       try {
         const { id } = jwt.verify(auth, JWT_SECRET);
         if (id) {
@@ -38,7 +34,7 @@ authRouter.get('/', async (req, res, next) => {
     } else {
       next({
         name: 'NoAuthTokenFound',
-        message: `Please Login`,
+        message: 'NoAuthTokenFound',
       });
     }
   })
