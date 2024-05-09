@@ -71,7 +71,7 @@ customersRouter.post('/login', async (req, res, next) => {
         role: cust.role,
         username: cust.username
       }, JWT_SECRET);
-      res.cookie('jwtCust', token, {path:'/', sameSite:'none',httpOnly:'true', secure:'true', maxAge: 60 * 60 * 24 * 7})
+      res.cookie('jwtCust', token, {path:'/', domain:'.onrender.com',httpOnly:'true', secure:'true', maxAge: 60 * 60 * 24 * 7})
           res.send({
               name: "LoginSuccess",
               message: "Login Succesful!",
@@ -97,7 +97,7 @@ customersRouter.post('/logout', async (req, res, next) => {
     if (auth == null) {
       res.send({name: "NoAuth", message:"NoAuth"})
     }else{
-      console.log("clearing cookie", {path:'/'})
+      console.log("clearing cookie", {path:'/', domain:'.onrender.com'})
       // res.cookie('jwtCust', 'null', {path:'/',httpOnly:'true', secure:'true',  expires: new Date(0)})
       res.clearCookie('jwtCust')
       res.sendStatus(204)
