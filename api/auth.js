@@ -8,12 +8,14 @@ const { getCustomerById } = require('../db');
 authRouter.get('/', async (req, res, next) => {
   
 
-  const auth = req.cookies.jwtCust
-
-    
-    if (auth == null) {
+  // const auth = req.cookies.jwtCust
+  const auth = req.header('x-jwtCust');
+    if (auth == undefined||null) {
+      console.log(auth + "null from auth")
+      // next()
       res.send({name: "NoAuth", message:"NoAuth"})
     } else if (auth) {
+      console.log(auth + "not null from auth")
       try {
         const { id } = jwt.verify(auth, JWT_SECRET);
         if (id) {
