@@ -9,13 +9,10 @@ const { getCustomerById } = require('../db');
 
 
 apiRouter.use(async (req, res, next) => {
-  // const auth = req.cookies.jwtCust
   const auth = req.header('x-jwtCust');
   if (auth == undefined||null) {
-    console.log(auth + "null from index")
     next();
-  } else if (auth) {
-    console.log(auth + "not null from index")
+  } else if (auth.length >10) {
     try {
       const { id } = jwt.verify(auth, JWT_SECRET);
       if (id) {
